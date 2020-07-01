@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 namespace Aula27_28_29_30
 
 {
@@ -52,8 +54,43 @@ namespace Aula27_28_29_30
 
                 prod.Add(p);
             }
+        
+            prod = prod.OrderBy(z=> z.Nome).ToList();
+
             return prod;
+
         }
+
+        public List<Produto> Filtrar(string _nome)
+        {
+            return Ler().FindAll(x => x.Nome == _nome);
+        }
+
+        public void Remover(string _termo)
+        {
+
+            //criamos uma lista de linhase faz a função de um backup na memoria do sistema
+            List<string> linhas = new List<string>();
+
+            using(StreamReader arquivo = new StreamReader(PATH))
+            {
+                string linha;
+                while((linha = arquivo.ReadLine()) != null)
+                {
+                    linhas.Add(linha);
+                }
+
+                linhas.RemoveAll(z => z.Contains(_termo));
+            }
+
+            using(StreamWriter output = new StreamWriter(PATH))
+            {
+                output.Write(string.Join(Environment.NewLine, linhas.ToArray()));
+            }
+
+
+        }
+
             /// <summary>
             /// Metodo que separa o = da string do .csv
             /// </summary>
